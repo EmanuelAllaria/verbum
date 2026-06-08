@@ -110,17 +110,94 @@
             backdrop-filter: var(--blur-effect);
             -webkit-backdrop-filter: var(--blur-effect);
             border: 1px solid var(--border-premium);
-            border-radius: 24px;
-            padding: 0.75rem 1.5rem;
+            border-radius: 28px;
+            padding: 0.85rem;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 2rem;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.7rem;
             width: min(100%, 1120px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             z-index: 10;
             transition: all 200ms ease-in-out;
+        }
+
+        #control-toggle {
+            width: 100%;
+            min-height: 56px;
+            padding: 0.9rem 1rem;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.03)),
+                rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+            justify-content: space-between;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        #control-toggle:hover {
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)),
+                rgba(255, 255, 255, 0.03);
+        }
+
+        .control-toggle-copy {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.18rem;
+            text-align: left;
+        }
+
+        #control-toggle-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        #control-toggle-helper {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.78rem;
+            letter-spacing: 0.03em;
+        }
+
+        .control-toggle-icon {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            transition: transform 200ms ease-in-out, color 200ms ease-in-out;
+        }
+
+        #control-bar.controls-open .control-toggle-icon {
+            transform: rotate(45deg);
+            color: var(--text-primary);
+        }
+
+        .controls-body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem 1.1rem;
+            max-height: 960px;
+            opacity: 1;
+            overflow: visible;
+            transform: translateY(0);
+            transform-origin: top center;
+            transition:
+                max-height 280ms ease,
+                opacity 220ms ease,
+                transform 220ms ease,
+                padding-top 220ms ease;
+        }
+
+        #control-bar.controls-collapsed .controls-body {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            padding-top: 0;
+            pointer-events: none;
+            transform: translateY(0.4rem);
         }
 
         .filter-group {
@@ -132,22 +209,38 @@
         }
 
         .search-group {
-            display: flex;
-            align-items: center;
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(120px, 0.7fr) minmax(0, 1.4fr) auto;
+            align-items: end;
             gap: 0.65rem;
             padding-right: 1rem;
             border-right: 1px solid var(--border-premium);
-            flex: 1 1 320px;
-            min-width: 280px;
+            flex: 1 1 680px;
+            min-width: min(100%, 680px);
         }
 
-        .search-field {
-            width: min(320px, 50vw);
-            min-width: 220px;
+        .field-shell {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            min-width: 0;
+        }
+
+        .field-label {
+            padding-left: 0.15rem;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.11em;
+        }
+
+        .multiselect-trigger {
+            width: 100%;
+            min-width: 0;
             background: rgba(255, 255, 255, 0.045);
             border: 1px solid rgba(255, 255, 255, 0.08);
             color: var(--text-primary);
-            padding: 0.72rem 1rem;
+            padding: 0.82rem 0.95rem;
             border-radius: 16px;
             outline: none;
             font-size: 0.9rem;
@@ -155,16 +248,244 @@
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
 
-        .search-field::placeholder {
-            color: rgba(255, 255, 255, 0.38);
-        }
-
-        .search-field:focus {
+        .multiselect-trigger:focus {
             border-color: rgba(255, 255, 255, 0.18);
             background: rgba(255, 255, 255, 0.065);
             box-shadow:
                 0 0 0 4px rgba(255, 255, 255, 0.05),
                 inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .verse-picker {
+            position: relative;
+        }
+
+        .select-picker {
+            position: relative;
+        }
+
+        .select-picker.open .multiselect-icon {
+            transform: rotate(180deg);
+        }
+
+        .multiselect-trigger {
+            justify-content: space-between;
+            padding-right: 0.85rem;
+        }
+
+        .multiselect-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .multiselect-icon {
+            color: rgba(255, 255, 255, 0.58);
+            transition: transform 200ms ease-in-out;
+        }
+
+        .verse-menu {
+            position: absolute;
+            top: calc(100% + 0.55rem);
+            left: 0;
+            right: 0;
+            z-index: 40;
+            padding: 0.8rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background:
+                linear-gradient(180deg, rgba(23, 26, 37, 0.98), rgba(12, 13, 22, 0.96)),
+                rgba(255, 255, 255, 0.02);
+            box-shadow:
+                0 18px 38px rgba(0, 0, 0, 0.34),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(0.35rem) scale(0.985);
+            transition: all 200ms ease-in-out;
+        }
+
+        .verse-picker.open .verse-menu {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+
+        .select-picker.open .select-menu {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+
+        .select-menu {
+            z-index: 45;
+        }
+
+        .select-menu-head {
+            margin-bottom: 0.75rem;
+        }
+
+        .select-search {
+            width: 100%;
+            min-height: 42px;
+            padding: 0.7rem 0.85rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.035);
+            color: var(--text-primary);
+            outline: none;
+            font-size: 0.88rem;
+            transition: all 200ms ease-in-out;
+        }
+
+        .select-search::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .select-search:focus {
+            border-color: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.04);
+        }
+
+        .select-option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            max-height: 260px;
+            overflow: auto;
+            scrollbar-width: thin;
+        }
+
+        .select-option {
+            width: 100%;
+            justify-content: space-between;
+            text-align: left;
+            min-height: 44px;
+            padding: 0.7rem 0.9rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.035);
+            color: rgba(255, 255, 255, 0.78);
+            transition: all 200ms ease-in-out;
+        }
+
+        .select-option:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        .select-option.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .select-option-meta {
+            color: rgba(255, 255, 255, 0.48);
+            font-size: 0.78rem;
+        }
+
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+            gap: 0.45rem;
+            max-height: 240px;
+            overflow: auto;
+            scrollbar-width: thin;
+        }
+
+        .chapter-chip {
+            min-height: 42px;
+            padding: 0.55rem 0.35rem;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.035);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.88rem;
+        }
+
+        .chapter-chip:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text-primary);
+        }
+
+        .chapter-chip.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .verse-menu-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .verse-menu-copy {
+            color: rgba(255, 255, 255, 0.56);
+            font-size: 0.78rem;
+        }
+
+        .verse-menu-actions {
+            display: flex;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .verse-inline-action {
+            min-height: 32px;
+            padding: 0.4rem 0.7rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 0.72rem;
+            letter-spacing: 0.04em;
+        }
+
+        .verse-chip-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+            gap: 0.45rem;
+            max-height: 220px;
+            overflow: auto;
+            scrollbar-width: thin;
+        }
+
+        .verse-chip {
+            min-height: 40px;
+            padding: 0.55rem 0.35rem;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.035);
+            color: rgba(255, 255, 255, 0.68);
+            font-size: 0.82rem;
+        }
+
+        .verse-chip:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text-primary);
+        }
+
+        .verse-chip.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .verse-empty {
+            display: grid;
+            place-items: center;
+            min-height: 84px;
+            border-radius: 16px;
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.82rem;
         }
 
         .action-group {
@@ -241,8 +562,7 @@
 
         @media (max-width: 1024px) {
             #control-bar {
-                gap: 1rem 1.25rem;
-                padding: 1rem 1.1rem;
+                padding: 0.8rem;
             }
 
             .filter-group,
@@ -250,102 +570,149 @@
                 border-right: none;
                 padding-right: 0;
             }
+
+            .search-group {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .search-group #search-btn {
+                grid-column: 1 / -1;
+            }
         }
 
         @media (max-width: 768px) {
             body {
                 min-height: 100dvh;
                 justify-content: flex-start;
-                gap: 1rem;
+                gap: 0.85rem;
                 padding:
                     max(0.85rem, env(safe-area-inset-top))
                     0.85rem
-                    max(0.85rem, env(safe-area-inset-bottom));
+                    max(1rem, calc(env(safe-area-inset-bottom) + 0.85rem));
             }
 
             #canvas-container {
                 flex: 0 1 auto;
                 justify-content: flex-start;
-                padding: 0.35rem 0 0;
+                padding: 0.1rem 0 0.35rem;
             }
 
             #verse-shell {
-                max-height: none;
-                min-height: clamp(320px, 56vh, 560px);
+                max-height: min(56vh, 540px);
+                min-height: clamp(260px, 44vh, 460px);
                 border-radius: 24px;
+                padding: 1.05rem 1rem 1.1rem;
             }
 
             #verbum-text {
-                font-size: clamp(1.45rem, 7vw, 2.4rem);
-                line-height: 1.34;
+                font-size: clamp(1.32rem, 6.1vw, 2.15rem);
+                line-height: 1.26;
             }
 
             #verbum-reference {
-                margin-top: 1.25rem;
-                letter-spacing: 0.16em;
+                margin-top: 1rem;
+                font-size: 0.78rem;
+                letter-spacing: 0.14em;
             }
 
             #control-bar {
                 position: sticky;
                 bottom: max(0.5rem, env(safe-area-inset-bottom));
-                gap: 1rem;
-                border-radius: 28px;
-                padding: 1rem;
+                gap: 0.7rem;
+                border-radius: 26px;
+                padding: 0.75rem;
+                background:
+                    linear-gradient(180deg, rgba(34, 37, 49, 0.84), rgba(13, 15, 24, 0.78)),
+                    rgba(255, 255, 255, 0.02);
+                box-shadow:
+                    0 18px 44px rgba(0, 0, 0, 0.34),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
             }
 
             .filter-group,
             .search-group,
             .action-group {
                 width: 100%;
+                border-right: none;
+                padding-right: 0;
             }
 
             .filter-group {
-                justify-content: stretch;
-                gap: 0.65rem;
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0.5rem;
             }
 
             .filter-group button {
-                flex: 1 1 calc(50% - 0.4rem);
+                width: 100%;
+                min-width: 0;
+                min-height: 52px;
+                padding: 0.7rem 0.5rem;
+                border-radius: 17px;
+                font-size: 0.76rem;
+                line-height: 1.15;
+                letter-spacing: 0.02em;
+                white-space: normal;
             }
 
             .search-group {
-                min-width: 0;
-                flex-wrap: wrap;
+                grid-template-columns: 1fr;
+                gap: 0.55rem;
             }
 
-            .search-field,
+            .multiselect-trigger {
+                min-height: 50px;
+                border-radius: 17px;
+                font-size: 0.88rem;
+            }
+
             #search-btn {
                 width: 100%;
                 min-width: 0;
+                min-height: 50px;
             }
 
             .action-group {
-                gap: 0.65rem;
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0.5rem;
+            }
+
+            #trigger-btn {
+                grid-column: 1 / -1;
+                min-height: 52px;
             }
 
             .action-group button {
-                flex: 1 1 calc(50% - 0.4rem);
+                width: 100%;
+                min-width: 0;
+                min-height: 48px;
+                padding: 0.72rem 0.6rem;
+                font-size: 0.8rem;
+                letter-spacing: 0.03em;
             }
         }
 
         @media (max-width: 540px) {
             #verse-shell {
-                padding: 1rem 0.95rem 1.1rem;
-                min-height: clamp(280px, 52vh, 500px);
+                min-height: clamp(220px, 40vh, 380px);
             }
 
             #verbum-text {
-                font-size: clamp(1.28rem, 8vw, 2rem);
+                font-size: clamp(1.14rem, 5.9vw, 1.7rem);
             }
 
-            #verbum-reference {
-                font-size: 0.8rem;
-                letter-spacing: 0.12em;
+            .filter-group button {
+                font-size: 0.72rem;
             }
 
-            .filter-group button,
-            .action-group button {
-                flex: 1 1 100%;
+            .verse-menu {
+                padding: 0.75rem;
+            }
+
+            .verse-menu-head {
+                flex-direction: column;
+                align-items: flex-start;
             }
 
             button {
@@ -363,32 +730,117 @@
         </div>
     </main>
 
-    <nav id="control-bar">
-        <div class="filter-group">
-            <button class="filter-btn active" data-filter="jesus" onclick="setFilter('jesus')">Jesús</button>
-            <button class="filter-btn" data-filter="padre" onclick="setFilter('padre')">Padre</button>
-            <button class="filter-btn" data-filter="espiritu" onclick="setFilter('espiritu')">Espíritu Santo</button>
-        </div>
+    <nav id="control-bar" class="controls-collapsed">
+        <button
+            id="control-toggle"
+            type="button"
+            onclick="toggleControlsPanel()"
+            aria-expanded="false"
+            aria-controls="controls-body"
+        >
+            <span class="control-toggle-copy">
+                <span id="control-toggle-label">Mostrar controles</span>
+                <span id="control-toggle-helper">Libro, capítulo y versículos</span>
+            </span>
+            <span class="control-toggle-icon">+</span>
+        </button>
 
-        <div class="search-group">
-            <input
-                id="reference-input"
-                class="search-field"
-                type="text"
-                placeholder="Buscar: Juan 3:16 o Juan 3:16-18"
-                aria-label="Buscar referencia bíblica"
-            />
-            <button id="search-btn" class="secondary-action" onclick="searchReference()">Buscar</button>
-        </div>
-        
-        <div class="action-group">
-            <button id="trigger-btn" class="primary-action" onclick="inspireAny()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                Inspirame
-            </button>
-            <button id="copy-btn" class="secondary-action" onclick="copyCurrentImage()" disabled>Copiar</button>
-            <button id="download-btn" class="secondary-action" onclick="downloadCurrentImage()" disabled>Descargar</button>
-            <button id="share-btn" class="secondary-action" onclick="shareCurrentImage()" disabled>Compartir</button>
+        <div id="controls-body" class="controls-body">
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="jesus" onclick="setFilter('jesus')">Jesús</button>
+                <button class="filter-btn" data-filter="padre" onclick="setFilter('padre')">Padre</button>
+                <button class="filter-btn" data-filter="espiritu" onclick="setFilter('espiritu')">Espíritu Santo</button>
+            </div>
+
+            <div class="search-group">
+                <div id="book-picker" class="field-shell select-picker">
+                    <span class="field-label">Libro</span>
+                    <button
+                        id="book-trigger"
+                        class="multiselect-trigger"
+                        type="button"
+                        onclick="toggleBookMenu()"
+                        aria-expanded="false"
+                        aria-controls="book-menu"
+                    >
+                        <span id="book-trigger-label" class="multiselect-label">—</span>
+                        <span class="multiselect-icon">▼</span>
+                    </button>
+                    <div id="book-menu" class="verse-menu select-menu">
+                        <div class="select-menu-head">
+                            <input
+                                id="book-search"
+                                class="select-search"
+                                type="text"
+                                placeholder="Buscar libro…"
+                                aria-label="Buscar libro"
+                                oninput="filterBookOptions()"
+                            />
+                        </div>
+                        <div id="book-options" class="select-option-list"></div>
+                    </div>
+                </div>
+
+                <div id="chapter-picker" class="field-shell select-picker">
+                    <span class="field-label">Capítulo</span>
+                    <button
+                        id="chapter-trigger"
+                        class="multiselect-trigger"
+                        type="button"
+                        onclick="toggleChapterMenu()"
+                        aria-expanded="false"
+                        aria-controls="chapter-menu"
+                    >
+                        <span id="chapter-trigger-label" class="multiselect-label">—</span>
+                        <span class="multiselect-icon">▼</span>
+                    </button>
+                    <div id="chapter-menu" class="verse-menu select-menu">
+                        <div id="chapter-options" class="chapter-grid"></div>
+                    </div>
+                </div>
+
+                <div id="verse-picker" class="field-shell verse-picker">
+                    <span class="field-label">Versículos</span>
+                    <button
+                        id="verse-trigger"
+                        class="multiselect-trigger"
+                        type="button"
+                        onclick="toggleVerseMenu()"
+                        aria-expanded="false"
+                        aria-controls="verse-menu"
+                    >
+                        <span id="verse-trigger-label" class="multiselect-label">Elegí uno o varios</span>
+                        <span class="multiselect-icon">▼</span>
+                    </button>
+
+                    <div id="verse-menu" class="verse-menu">
+                        <div class="verse-menu-head">
+                            <span class="verse-menu-copy">Seleccioná uno o varios versículos</span>
+                            <div class="verse-menu-actions">
+                                <button type="button" class="verse-inline-action" onclick="selectAllVerses()">Todos</button>
+                                <button type="button" class="verse-inline-action" onclick="clearVerseSelection()">Limpiar</button>
+                                <button type="button" class="verse-inline-action" onclick="applyVerseSelection()">Aceptar</button>
+                                <button type="button" class="verse-inline-action" onclick="cancelVerseSelection()">Cancelar</button>
+                            </div>
+                        </div>
+                        <div id="verse-options" class="verse-chip-list">
+                            <div class="verse-empty">Elegí libro y capítulo</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="search-btn" class="secondary-action" onclick="searchReference()">Buscar</button>
+            </div>
+
+            <div class="action-group">
+                <button id="trigger-btn" class="primary-action" onclick="inspireAny()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    Inspirame
+                </button>
+                <button id="copy-btn" class="secondary-action" onclick="copyCurrentImage()" disabled>Copiar</button>
+                <button id="download-btn" class="secondary-action" onclick="downloadCurrentImage()" disabled>Descargar</button>
+                <button id="share-btn" class="secondary-action" onclick="shareCurrentImage()" disabled>Compartir</button>
+            </div>
         </div>
     </nav>
 
@@ -515,9 +967,377 @@
         let currentDisplay = null;
         const API_BASE = 'https://api.midvash.com/v1/rvr1960';
         const BOOK_LOOKUP = new Map();
+        const chapterVerseCache = new Map();
+        let selectedBookSlug = 'john';
+        let selectedChapter = 3;
+        let selectedVerses = [];
+        let pendingVerses = null;
+        let controlsAreOpen = false;
+        let compactViewport = false;
 
         function randomFrom(list) {
             return list[Math.floor(Math.random() * list.length)];
+        }
+
+        function isCompactViewport() {
+            return window.matchMedia('(max-width: 768px)').matches;
+        }
+
+        function chapterCacheKey(bookSlug, chapter) {
+            return `${bookSlug}:${chapter}`;
+        }
+
+        function cacheChapterVerses(bookSlug, chapter, verses) {
+            chapterVerseCache.set(
+                chapterCacheKey(bookSlug, chapter),
+                verses.map(verse => String(verse || '').trim()).filter(Boolean)
+            );
+        }
+
+        function getCachedChapterVerses(bookSlug, chapter) {
+            return chapterVerseCache.get(chapterCacheKey(bookSlug, chapter)) || null;
+        }
+
+        function buildVerseRange(startVerse, endVerse) {
+            return Array.from({ length: endVerse - startVerse + 1 }, (_, index) => startVerse + index);
+        }
+
+        function formatVerseSelectionReference(verses) {
+            const sorted = [...new Set(verses)].sort((a, b) => a - b);
+            if (!sorted.length) return '';
+            const parts = [];
+            let rangeStart = sorted[0];
+            let previous = sorted[0];
+
+            for (let index = 1; index <= sorted.length; index += 1) {
+                const current = sorted[index];
+                if (current === previous + 1) {
+                    previous = current;
+                    continue;
+                }
+                parts.push(rangeStart === previous ? `${rangeStart}` : `${rangeStart}-${previous}`);
+                rangeStart = current;
+                previous = current;
+            }
+
+            return parts.join(',');
+        }
+
+        function syncControlToggleCopy() {
+            const label = document.getElementById('control-toggle-label');
+            const helper = document.getElementById('control-toggle-helper');
+            if (label) label.textContent = controlsAreOpen ? 'Ocultar controles' : 'Mostrar controles';
+            if (helper) helper.textContent = `${filterLabels[currentFilter]} · Libro, capítulo y versículos`;
+        }
+
+        function setControlsPanelOpen(isOpen) {
+            controlsAreOpen = Boolean(isOpen);
+            const controlBar = document.getElementById('control-bar');
+            const toggle = document.getElementById('control-toggle');
+            if (!controlBar || !toggle) return;
+            controlBar.classList.toggle('controls-open', controlsAreOpen);
+            controlBar.classList.toggle('controls-collapsed', !controlsAreOpen);
+            toggle.setAttribute('aria-expanded', String(controlsAreOpen));
+            syncControlToggleCopy();
+            if (!controlsAreOpen) closeVerseMenu();
+        }
+
+        function toggleControlsPanel() {
+            setControlsPanelOpen(!controlsAreOpen);
+        }
+
+        function syncControlsLayout(force = false) {
+            const nextCompactViewport = isCompactViewport();
+            if (force || nextCompactViewport !== compactViewport) {
+                compactViewport = nextCompactViewport;
+                setControlsPanelOpen(!compactViewport);
+            }
+        }
+
+        function selectedBook() {
+            return BIBLE_BOOKS.find(book => book.slug === selectedBookSlug) || BIBLE_BOOKS[0];
+        }
+
+        function syncBookTriggerLabel() {
+            const label = document.getElementById('book-trigger-label');
+            const book = selectedBook();
+            if (label) label.textContent = book?.name || '—';
+        }
+
+        function syncChapterTriggerLabel() {
+            const label = document.getElementById('chapter-trigger-label');
+            if (label) label.textContent = String(selectedChapter || '—');
+        }
+
+        function renderBookOptions(filterValue = '') {
+            const container = document.getElementById('book-options');
+            if (!container) return;
+            const query = normalizeText(filterValue).trim();
+            const list = query
+                ? BIBLE_BOOKS.filter(book => normalizeText(book.name).includes(query))
+                : BIBLE_BOOKS;
+            container.innerHTML = list.map(book => {
+                const active = book.slug === selectedBookSlug ? ' active' : '';
+                return `<button type="button" class="select-option${active}" onclick="selectBook('${book.slug}')"><span>${book.name}</span><span class="select-option-meta">${book.chapters}</span></button>`;
+            }).join('');
+        }
+
+        function renderChapterOptions() {
+            const container = document.getElementById('chapter-options');
+            const book = selectedBook();
+            if (!container || !book) return;
+            const chapters = book.chapters || 1;
+            const safeChapter = Math.min(Math.max(1, selectedChapter || 1), chapters);
+            selectedChapter = safeChapter;
+            container.innerHTML = Array.from({ length: chapters }, (_, index) => {
+                const chapterNumber = index + 1;
+                const active = chapterNumber === safeChapter ? ' active' : '';
+                return `<button type="button" class="chapter-chip${active}" onclick="selectChapter(${chapterNumber})">${chapterNumber}</button>`;
+            }).join('');
+            syncChapterTriggerLabel();
+        }
+
+        function closeBookMenu() {
+            const picker = document.getElementById('book-picker');
+            const trigger = document.getElementById('book-trigger');
+            if (picker) picker.classList.remove('open');
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        function toggleBookMenu() {
+            const picker = document.getElementById('book-picker');
+            const trigger = document.getElementById('book-trigger');
+            if (!picker || !trigger || trigger.disabled) return;
+            const willOpen = !picker.classList.contains('open');
+            picker.classList.toggle('open', willOpen);
+            trigger.setAttribute('aria-expanded', String(willOpen));
+            if (willOpen) {
+                const search = document.getElementById('book-search');
+                if (search) {
+                    search.value = '';
+                    search.focus();
+                }
+                renderBookOptions('');
+            }
+        }
+
+        function filterBookOptions() {
+            const search = document.getElementById('book-search');
+            renderBookOptions(search?.value || '');
+        }
+
+        function selectBook(slug) {
+            if (!BIBLE_BOOKS.some(book => book.slug === slug)) return;
+            selectedBookSlug = slug;
+            selectedChapter = 1;
+            syncBookTriggerLabel();
+            renderChapterOptions();
+            closeBookMenu();
+            closeChapterMenu();
+            closeVerseMenu();
+            loadVerseOptions({ preserveSelection: false }).catch(() => {});
+        }
+
+        function closeChapterMenu() {
+            const picker = document.getElementById('chapter-picker');
+            const trigger = document.getElementById('chapter-trigger');
+            if (picker) picker.classList.remove('open');
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        function toggleChapterMenu() {
+            const picker = document.getElementById('chapter-picker');
+            const trigger = document.getElementById('chapter-trigger');
+            if (!picker || !trigger || trigger.disabled) return;
+            const willOpen = !picker.classList.contains('open');
+            picker.classList.toggle('open', willOpen);
+            trigger.setAttribute('aria-expanded', String(willOpen));
+            if (willOpen) renderChapterOptions();
+        }
+
+        function selectChapter(chapter) {
+            const book = selectedBook();
+            const maxChapters = book?.chapters || 1;
+            const safeChapter = Math.min(Math.max(1, Number(chapter) || 1), maxChapters);
+            selectedChapter = safeChapter;
+            syncChapterTriggerLabel();
+            renderChapterOptions();
+            closeChapterMenu();
+            closeVerseMenu();
+            loadVerseOptions({ preserveSelection: false }).catch(() => {});
+        }
+
+        async function fetchChapterVerses(bookSlug, chapter) {
+            const cached = getCachedChapterVerses(bookSlug, chapter);
+            if (cached) return cached;
+
+            const response = await fetch(`${API_BASE}/${bookSlug}/${chapter}`);
+            if (!response.ok) throw new Error('No se pudo cargar el capítulo');
+
+            const data = await response.json();
+            const verses = data?.data?.verses;
+            if (!Array.isArray(verses) || verses.length === 0) {
+                throw new Error('Capítulo vacío');
+            }
+
+            cacheChapterVerses(bookSlug, chapter, verses);
+            return getCachedChapterVerses(bookSlug, chapter) || [];
+        }
+
+        function getCurrentSelectionContext() {
+            return { bookSlug: selectedBookSlug, chapter: selectedChapter };
+        }
+
+        function getCurrentSelectionVerses() {
+            const { bookSlug, chapter } = getCurrentSelectionContext();
+            if (!bookSlug || !chapter) return [];
+            return getCachedChapterVerses(bookSlug, chapter) || [];
+        }
+
+        function updateVerseTriggerLabel() {
+            const triggerLabel = document.getElementById('verse-trigger-label');
+            if (!triggerLabel) return;
+            if (!selectedVerses.length) {
+                triggerLabel.textContent = 'Elegí uno o varios';
+                return;
+            }
+            const compactLabel = formatVerseSelectionReference(selectedVerses);
+            triggerLabel.textContent = selectedVerses.length <= 4 ? compactLabel : `${selectedVerses.length} versículos`;
+        }
+
+        function renderVerseOptions(verses, activeSelection) {
+            const container = document.getElementById('verse-options');
+            if (!container) return;
+
+            if (!verses.length) {
+                container.innerHTML = '<div class="verse-empty">No hay versículos disponibles</div>';
+                return;
+            }
+
+            container.innerHTML = verses.map((_, index) => {
+                const verseNumber = index + 1;
+                const active = (activeSelection || []).includes(verseNumber) ? ' active' : '';
+                return `<button type="button" class="verse-chip${active}" onclick="toggleVerseSelection(${verseNumber})">${verseNumber}</button>`;
+            }).join('');
+        }
+
+        async function loadVerseOptions({ preserveSelection = true, preselectedVerses = null } = {}) {
+            const { bookSlug, chapter } = getCurrentSelectionContext();
+            const container = document.getElementById('verse-options');
+            const trigger = document.getElementById('verse-trigger');
+            if (!bookSlug || !chapter || !container || !trigger) return [];
+
+            container.innerHTML = '<div class="verse-empty">Cargando versículos...</div>';
+            trigger.disabled = true;
+
+            try {
+                const verses = await fetchChapterVerses(bookSlug, chapter);
+                const nextSelection = Array.isArray(preselectedVerses)
+                    ? preselectedVerses
+                    : preserveSelection
+                        ? selectedVerses
+                        : [];
+
+                selectedVerses = [...new Set(nextSelection)]
+                    .filter(verse => verse >= 1 && verse <= verses.length)
+                    .sort((a, b) => a - b);
+                pendingVerses = null;
+
+                renderVerseOptions(verses, selectedVerses);
+                updateVerseTriggerLabel();
+                return verses;
+            } catch (error) {
+                selectedVerses = [];
+                pendingVerses = null;
+                updateVerseTriggerLabel();
+                container.innerHTML = '<div class="verse-empty">No se pudieron cargar los versículos</div>';
+                return [];
+            } finally {
+                trigger.disabled = false;
+            }
+        }
+
+        function closeVerseMenu() {
+            const picker = document.getElementById('verse-picker');
+            const trigger = document.getElementById('verse-trigger');
+            if (picker) picker.classList.remove('open');
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+            pendingVerses = null;
+        }
+
+        function toggleVerseMenu() {
+            const picker = document.getElementById('verse-picker');
+            const trigger = document.getElementById('verse-trigger');
+            if (!picker || !trigger || trigger.disabled) return;
+            const willOpen = !picker.classList.contains('open');
+            picker.classList.toggle('open', willOpen);
+            trigger.setAttribute('aria-expanded', String(willOpen));
+            if (willOpen) {
+                pendingVerses = [...selectedVerses];
+                renderVerseOptions(getCurrentSelectionVerses(), pendingVerses);
+            } else {
+                pendingVerses = null;
+            }
+        }
+
+        function toggleVerseSelection(verseNumber) {
+            const target = Array.isArray(pendingVerses) ? pendingVerses : [...selectedVerses];
+            if (target.includes(verseNumber)) {
+                pendingVerses = target.filter(value => value !== verseNumber);
+            } else {
+                pendingVerses = [...target, verseNumber].sort((a, b) => a - b);
+            }
+            renderVerseOptions(getCurrentSelectionVerses(), pendingVerses);
+        }
+
+        function clearVerseSelection() {
+            if (Array.isArray(pendingVerses)) {
+                pendingVerses = [];
+                renderVerseOptions(getCurrentSelectionVerses(), pendingVerses);
+                return;
+            }
+            selectedVerses = [];
+            renderVerseOptions(getCurrentSelectionVerses(), selectedVerses);
+            updateVerseTriggerLabel();
+        }
+
+        function selectAllVerses() {
+            const verses = getCurrentSelectionVerses();
+            const all = verses.map((_, index) => index + 1);
+            if (Array.isArray(pendingVerses)) {
+                pendingVerses = all;
+                renderVerseOptions(verses, pendingVerses);
+                return;
+            }
+            selectedVerses = all;
+            renderVerseOptions(verses, selectedVerses);
+            updateVerseTriggerLabel();
+        }
+
+        function applyVerseSelection() {
+            if (!Array.isArray(pendingVerses)) return;
+            selectedVerses = [...new Set(pendingVerses)].sort((a, b) => a - b);
+            pendingVerses = null;
+            renderVerseOptions(getCurrentSelectionVerses(), selectedVerses);
+            updateVerseTriggerLabel();
+            closeVerseMenu();
+        }
+
+        function cancelVerseSelection() {
+            pendingVerses = null;
+            renderVerseOptions(getCurrentSelectionVerses(), selectedVerses);
+            closeVerseMenu();
+        }
+
+        async function syncSearchControlsToPassage(bookSlug, chapter, verseNumbers = []) {
+            if (BIBLE_BOOKS.some(book => book.slug === bookSlug)) {
+                selectedBookSlug = bookSlug;
+                selectedChapter = Number(chapter) || 1;
+                syncBookTriggerLabel();
+                renderBookOptions('');
+                renderChapterOptions();
+            }
+            await loadVerseOptions({ preserveSelection: false, preselectedVerses: verseNumbers });
         }
 
         function adjustVerseLayout(text) {
@@ -598,10 +1418,20 @@
         function setBusyState(isBusy) {
             const triggerBtn = document.getElementById('trigger-btn');
             const searchBtn = document.getElementById('search-btn');
-            const searchInput = document.getElementById('reference-input');
+            const controlToggle = document.getElementById('control-toggle');
+            const bookTrigger = document.getElementById('book-trigger');
+            const chapterTrigger = document.getElementById('chapter-trigger');
+            const verseTrigger = document.getElementById('verse-trigger');
             if (triggerBtn) triggerBtn.disabled = isBusy;
             if (searchBtn) searchBtn.disabled = isBusy;
-            if (searchInput) searchInput.disabled = isBusy;
+            if (controlToggle) controlToggle.disabled = isBusy;
+            if (bookTrigger) bookTrigger.disabled = isBusy;
+            if (chapterTrigger) chapterTrigger.disabled = isBusy;
+            if (verseTrigger) verseTrigger.disabled = isBusy;
+            document.querySelectorAll('.filter-btn, .verse-inline-action, .verse-chip, .select-option, .chapter-chip').forEach(element => {
+                element.disabled = isBusy;
+            });
+            if (isBusy) closeVerseMenu();
             if (isBusy) setExportButtonsDisabled(true);
         }
 
@@ -610,6 +1440,7 @@
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
             document.body.style.backgroundColor = `var(--bg-${filter})`;
+            syncControlToggleCopy();
         }
 
         function pulseActionLabel(button, label, fallbackLabel, duration = 1400) {
@@ -1013,13 +1844,13 @@
         }
 
         async function searchReference() {
-            const input = document.getElementById('reference-input');
-            const parsed = parseReferenceInput(input?.value);
             const textElement = document.getElementById('verbum-text');
             const refElement = document.getElementById('verbum-reference');
+            const { bookSlug, chapter } = getCurrentSelectionContext();
+            const verseReference = formatVerseSelectionReference(selectedVerses);
 
-            if (!parsed) {
-                showMessageState('Referencia inválida.', 'Usá algo como Juan 3:16 o Juan 3:16-18');
+            if (!bookSlug || !chapter || !selectedVerses.length) {
+                showMessageState('Seleccioná uno o más versículos.', 'Elegí libro, capítulo y uno o varios versículos');
                 return;
             }
 
@@ -1029,32 +1860,28 @@
             refElement.style.opacity = '0';
 
             try {
-                const versePart = parsed.verseStart === parsed.verseEnd
-                    ? `${parsed.verseStart}`
-                    : `${parsed.verseStart}-${parsed.verseEnd}`;
-                const response = await fetch(`${API_BASE}/${parsed.slug}/${parsed.chapter}/${versePart}`);
-                if (!response.ok) throw new Error('Referencia no encontrada');
+                const verses = await fetchChapterVerses(bookSlug, chapter);
+                const cleanText = selectedVerses
+                    .map(verseNumber => verses[verseNumber - 1])
+                    .filter(Boolean)
+                    .join(' ');
+                if (!cleanText) throw new Error('Pasaje vacío');
 
-                const data = await response.json();
-                const verses = data?.data?.verses;
-                if (!Array.isArray(verses) || verses.length === 0) {
-                    throw new Error('Pasaje vacío');
-                }
-
-                const cleanText = verses.map(verse => String(verse || '').trim()).filter(Boolean).join(' ');
                 const display = {
                     text: cleanText,
-                    reference: `${bookNameFromSlug(parsed.slug)} ${parsed.chapter}:${versePart}`,
+                    reference: `${bookNameFromSlug(bookSlug)} ${chapter}:${verseReference}`,
                     filter: currentFilter
                 };
 
                 setTimeout(() => {
                     applyDisplayResult(display);
+                    closeVerseMenu();
+                    if (compactViewport) setControlsPanelOpen(false);
                     setBusyState(false);
                 }, 220);
             } catch (error) {
                 setTimeout(() => {
-                    showMessageState('No se encontró ese pasaje.', 'Probá con una referencia válida del mismo capítulo');
+                    showMessageState('No se encontró ese pasaje.', 'Probá con otra selección dentro del capítulo');
                     setBusyState(false);
                 }, 220);
             }
@@ -1082,6 +1909,7 @@
                     const data = await response.json();
                     const verses = data?.data?.verses;
                     if (!Array.isArray(verses) || verses.length === 0) continue;
+                    cacheChapterVerses(randomBook.slug, randomChapter, verses);
 
                     const candidate = findBestPassageInChapter(verses, profile);
                     if (!candidate) continue;
@@ -1105,6 +1933,7 @@
                         bestMatch.startVerse === bestMatch.endVerse
                             ? `${bestMatch.book.name} ${bestMatch.chapter}:${bestMatch.startVerse}`
                             : `${bestMatch.book.name} ${bestMatch.chapter}:${bestMatch.startVerse}-${bestMatch.endVerse}`;
+                    const matchedVerses = buildVerseRange(bestMatch.startVerse, bestMatch.endVerse);
                     applyDisplayResult({
                         text: bestMatch.text,
                         reference,
@@ -1112,6 +1941,9 @@
                         styleClass: randomFrom(fonts),
                         align: randomFrom(alignments)
                     });
+                    syncSearchControlsToPassage(bestMatch.book.slug, bestMatch.chapter, matchedVerses).catch(() => {});
+                    closeVerseMenu();
+                    if (compactViewport) setControlsPanelOpen(false);
                     setBusyState(false);
                 }, 300);
 
@@ -1123,14 +1955,35 @@
             }
         }
 
-        window.onload = () => {
+        window.onload = async () => {
             setActiveFilterUI(currentFilter);
+            syncControlsLayout(true);
+            selectedBookSlug = 'john';
+            selectedChapter = 3;
+            syncBookTriggerLabel();
+            syncChapterTriggerLabel();
+            renderBookOptions('');
+            renderChapterOptions();
+            await loadVerseOptions({ preserveSelection: false, preselectedVerses: [16] });
             fetchBibleVersicle();
-            document.getElementById('reference-input')?.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    searchReference();
+            document.addEventListener('click', (event) => {
+                const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+                const versePicker = document.getElementById('verse-picker');
+                const bookPicker = document.getElementById('book-picker');
+                const chapterPicker = document.getElementById('chapter-picker');
+                if (versePicker && !(path.includes(versePicker) || versePicker.contains(event.target))) closeVerseMenu();
+                if (bookPicker && !(path.includes(bookPicker) || bookPicker.contains(event.target))) closeBookMenu();
+                if (chapterPicker && !(path.includes(chapterPicker) || chapterPicker.contains(event.target))) closeChapterMenu();
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    closeVerseMenu();
+                    closeBookMenu();
+                    closeChapterMenu();
                 }
+            });
+            window.addEventListener('resize', () => {
+                syncControlsLayout();
             });
         };
     </script>
